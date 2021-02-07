@@ -1,4 +1,4 @@
-package com.seeingvoice.case36audiotrack_puretone;
+package com.seeingvoice.case37audiotrackpcm;
 
 import org.junit.Test;
 
