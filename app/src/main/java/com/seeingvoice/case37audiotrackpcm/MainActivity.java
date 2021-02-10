@@ -9,6 +9,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String TAG = "MainActivity";
     private PlayThread tPlayThread;
+    private PlayThreadStatic tsPlayThread;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         int vid= view.getId();
-        if (vid == R.id.btn_play) {
+        if (vid == R.id.btn_play_static) {
+            if (null != tsPlayThread) {
+                tsPlayThread.stopp();
+                tsPlayThread = null;
+            }
+            tsPlayThread = new PlayThreadStatic(this, "seeingvoice.com_250Hz45_37_3s.wav");
+            tsPlayThread.start();
+        }else if (vid == R.id.btn_play){
             if (null != tPlayThread) {
                 tPlayThread.stopp();
                 tPlayThread = null;
