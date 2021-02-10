@@ -10,12 +10,21 @@
         android:id="@+id/btn_play"
         android:layout_width="131dp"
         android:layout_height="75dp"
+        android:layout_marginStart="60dp"
         android:text="@string/play"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btn_left"
-        app:layout_constraintHorizontal_bias="0.312"
-        app:layout_constraintStart_toEndOf="@+id/btn_left"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_play_static"
+        android:layout_width="131dp"
+        android:layout_height="75dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/playstatic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_play"
+        app:layout_constraintTop_toTopOf="@+id/btn_play" />
 
     <Button
         android:id="@+id/btn_left"
