@@ -14,7 +14,7 @@ import java.io.InputStream;
  * Created by LeoReny@hypech.com on 2021/2/2.
  */
 
-public class PlayThread extends Thread {
+public class StreamThread extends Thread {
 
     private static final String TAG = "PlayThread";
     //private int mSampleRateInHz = 16000;
@@ -28,7 +28,7 @@ public class PlayThread extends Thread {
     private byte[] aData;
     private String sFileName;
 
-    public PlayThread(Activity activity, String fileName) {
+    public StreamThread(Activity activity, String fileName) {
         oActivity = activity;
         sFileName = fileName;
 
@@ -65,29 +65,29 @@ public class PlayThread extends Thread {
                 if (-1 != (len = inputStream.read(buffer))) {
                     byteArrayOutputStream.write(buffer, 0, len);
                     aData = byteArrayOutputStream.toByteArray();
-                    Log.i(TAG, "run: 已缓冲 : " + aData.length);
+                    Log.e(TAG, "run: 已缓冲 : " + aData.length);
                 } else {
                     // 缓冲完成
                     isLoaded = true;
                 }
 
                 if (AudioTrack.PLAYSTATE_PLAYING == oAudioTrack.getPlayState()) {
-                    Log.i(TAG, "run: 开始从 " + playIndex + " 播放");
+                    Log.e(TAG, "run: 开始从 " + playIndex + " 播放");
                     playIndex += oAudioTrack.write(aData, playIndex, aData.length - playIndex);
-                    Log.i(TAG, "run: 播放到了 : " + playIndex);
+                    Log.e(TAG, "run: 播放到了 : " + playIndex);
                     if (isLoaded && playIndex == aData.length) {
-                        Log.i(TAG, "run: 播放完了");
+                        Log.e(TAG, "run: 播放完了");
                         oAudioTrack.stop();
                     }
 
                     if (playIndex < 0) {
-                        Log.i(TAG, "run: 播放出错");
+                        Log.e(TAG, "run: 播放出错");
                         oAudioTrack.stop();
                         break;
                     }
                 }
             }
-            Log.i(TAG, "run: play end");
+            Log.e(TAG, "run: play end");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,7 +111,7 @@ public class PlayThread extends Thread {
             oAudioTrack.play();
     }
 
-    public void stopp() {
+    public void stopStream() {
         releaseAudioTrack();
     }
 

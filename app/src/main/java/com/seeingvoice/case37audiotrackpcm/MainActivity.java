@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+
+//DUAL_MONO_MODE_OFF
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "MainActivity";
-    private PlayThread tPlayThread;
-    private PlayThreadStatic tsPlayThread;
+    private StreamThread mStreamThread;
+    private StaticThread mStaticThread;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,41 +35,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int vid= view.getId();
         if (vid == R.id.btn_play_static) {
-            if (null != tsPlayThread) {
-                tsPlayThread.stopp();
-                tsPlayThread = null;
+            if (null != mStaticThread) {
+                mStaticThread.stopStatic();
+                mStaticThread = null;
             }
-            tsPlayThread = new PlayThreadStatic(this, "seeingvoice.com_250Hz45_37_3s.wav");
-            tsPlayThread.start();
+            mStaticThread = new StaticThread(this, "seeingvoice.com_250Hz45_37_3s.wav");
+            mStaticThread.start();
         }else if (vid == R.id.btn_play){
-            if (null != tPlayThread) {
-                tPlayThread.stopp();
-                tPlayThread = null;
+            if (null != mStreamThread) {
+                mStreamThread.stopStream();
+                mStreamThread = null;
             }
-            tPlayThread = new PlayThread(this, "seeingvoice.com_250Hz45_37_3s.wav");
-            tPlayThread.start();
+            mStreamThread = new StreamThread(this, "440Hz_44100Hz_16bit_30sec.wav");
+            mStreamThread.start();
         }else if (vid == R.id.btn_left){
-            if (null != tPlayThread) {
-                tPlayThread.stopp();
-                tPlayThread = null;
-            }
-            tPlayThread = new PlayThread(this, "seeingvoice.com_250Hz45_37_3s.wav");
-            tPlayThread.setChannel(false, true);
-            int i =1;
-            int ii =2;
-            tPlayThread.start();
+            if (null != mStaticThread)                mStaticThread.setChannel(false, true);
+            if (null != mStreamThread)                mStreamThread.setChannel(false, true);
         }else if (vid == R.id.btn_right){
-            if (null != tPlayThread) {
-                tPlayThread.stopp();
-                tPlayThread = null;
-            }
-            tPlayThread = new PlayThread(this, "seeingvoice.com_sin_1000Hz_0dBFS_3s.wav");
-            tPlayThread.start();
-                tPlayThread.setChannel(true, false);
+            if (null != mStaticThread)                mStaticThread.setChannel(true, false);
+            if (null != mStreamThread)                mStreamThread.setChannel(true, false);
         }else if (vid == R.id.btn_stop){
-            if (null != tPlayThread) {
-                tPlayThread.stopp();
-                tPlayThread = null;
+            if (null != mStreamThread) {
+                mStreamThread.stopStream();
+                mStreamThread = null;
+            }
+            if (null != mStaticThread) {
+                mStaticThread.stopStatic();
+                mStaticThread = null;
             }
         }
     }

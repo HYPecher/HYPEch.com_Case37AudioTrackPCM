@@ -17,7 +17,7 @@ import static com.seeingvoice.case37audiotrackpcm.GlobalConfig.SAMPLE_RATE;
  * Created by LeoReny@hypech.com on 2021/2/10.
  */
 
-public class PlayThreadStatic extends Thread {
+public class StaticThread extends Thread {
     private static final String TAG = "Static";
 
     private Activity    mActivity;
@@ -25,12 +25,13 @@ public class PlayThreadStatic extends Thread {
     private byte[] audioData;
     private String mFileName;
 
-    public PlayThreadStatic(Activity activity, String fileName) {
+    public StaticThread(Activity activity, String fileName) {
         mActivity = activity;
         mFileName = fileName;
 
         try {
-            InputStream in = mActivity.getResources().openRawResource(R.raw.ding);
+            // InputStream in = mActivity.getResources().openRawResource(R.raw.ss);
+            InputStream in = mActivity.getAssets().open("seeingvoice.com_250Hz85_2_3s.wav");
             try {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 for (int b; (b = in.read()) != -1; ) {
@@ -49,25 +50,22 @@ public class PlayThreadStatic extends Thread {
                         .setUsage(AudioAttributes.USAGE_MEDIA)
                         .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                         .build(),
-                new AudioFormat.Builder().setSampleRate(22050)
-                        .setEncoding(AudioFormat.ENCODING_PCM_8BIT)
+                new AudioFormat.Builder().setSampleRate(SAMPLE_RATE)
+                        .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
                         .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
                         .build(),
                 audioData.length,
                 AudioTrack.MODE_STATIC,
                 AudioManager.AUDIO_SESSION_ID_GENERATE);
+        Log.e(TAG, "Writing audio data..."+audioData.length);
     }
-
-
 
     @Override
     public void run() {
         super.run();
-        Log.d(TAG, "Writing audio data...");
-        mAudioTrack.write(audioData, 0, audioData.length);
-        Log.d(TAG, "Starting playback");
+        Log.e(TAG, "Writing audio data..."+audioData.length);
+        mAudioTrack.write(audioData, 44, audioData.length-44);
         mAudioTrack.play();
-        Log.d(TAG, "Playing");
     }
 
     /**
@@ -88,7 +86,7 @@ public class PlayThreadStatic extends Thread {
             mAudioTrack.play();
     }
 
-    public void stopp() {
+    public void stopStatic() {
         releaseAudioTrack();
     }
 
