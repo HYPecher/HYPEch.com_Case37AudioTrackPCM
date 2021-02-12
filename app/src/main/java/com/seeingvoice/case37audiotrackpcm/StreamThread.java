@@ -40,15 +40,16 @@ public class StreamThread extends Thread {
                 AudioFormat.ENCODING_PCM_16BIT,
                 bufferSize,
                 AudioTrack.MODE_STREAM);
+        if (null != oAudioTrack) {
+            this.setChannel(true,false);
+            oAudioTrack.play();
+        }
     }
 
     @Override
     public void run() {
         super.run();
         try {
-            if (null != oAudioTrack)
-                oAudioTrack.play();
-
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             InputStream inputStream = oActivity.getResources().getAssets().open(sFileName);
 

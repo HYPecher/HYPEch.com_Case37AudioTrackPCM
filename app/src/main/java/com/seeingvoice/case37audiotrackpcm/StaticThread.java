@@ -25,13 +25,14 @@ public class StaticThread extends Thread {
     private byte[] audioData;
     private String mFileName;
 
-    public StaticThread(Activity activity, String fileName) {
+    public StaticThread(Activity activity, String fileName, boolean isLR) {
         mActivity = activity;
         mFileName = fileName;
+        int iLR = isLR ? 1 : 0;
 
         try {
             // InputStream in = mActivity.getResources().openRawResource(R.raw.ss);
-            InputStream in = mActivity.getAssets().open("seeingvoice.com_250Hz85_2_3s.wav");
+            InputStream in = mActivity.getAssets().open("mihuan.wav");
             try {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 for (int b; (b = in.read()) != -1; ) {
@@ -45,6 +46,8 @@ public class StaticThread extends Thread {
         } catch (IOException e) {
             Log.wtf(TAG, "Failed to read", e);
         }
+
+        /* not good for single chanel
         mAudioTrack = new AudioTrack(
                 new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -57,33 +60,42 @@ public class StaticThread extends Thread {
                 audioData.length,
                 AudioTrack.MODE_STATIC,
                 AudioManager.AUDIO_SESSION_ID_GENERATE);
-        Log.e(TAG, "Writing audio data..."+audioData.length);
-    }
+        */
+        int bufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        mAudioTrack = new AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                SAMPLE_RATE,
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize,
+                AudioTrack.MODE_STREAM);
+        if (null != mAudioTrack) {
+            mAudioTrack.setStereoVolume(iLR,1-iLR);
+            mAudioTrack.play();
+        }
+  }
 
     @Override
     public void run() {
         super.run();
         Log.e(TAG, "Writing audio data..."+audioData.length);
         mAudioTrack.write(audioData, 44, audioData.length-44);
-        mAudioTrack.play();
     }
 
-    /**
-     * 设置左右声道是否可用
-     *
-     * @param left  左声道
-     * @param right 右声道
-     */
+    /*
+    public void play() {
+        if (null != mAudioTrack)
+            mAudioTrack.play();
+    }
+
+
+*/
+
     public void setChannel(boolean left, boolean right) {
         if (null != mAudioTrack) {
             mAudioTrack.setStereoVolume(left ? 1 : 0, right ? 1 : 0);
             mAudioTrack.play();
         }
-    }
-
-    public void play() {
-        if (null != mAudioTrack)
-            mAudioTrack.play();
     }
 
     public void stopStatic() {
